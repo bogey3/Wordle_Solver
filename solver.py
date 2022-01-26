@@ -84,8 +84,4 @@ if __name__ == '__main__':
 
         if len(validWords) == 1:
             enterWord(browser, validWords[0])
-            #print("I guessed \"" + word + "\". There is now " + str(len(validWords)) + " valid word.\n\nThe word is: " + validWords[0] + "\nI took " + str(guesses + 1) + " guesses.")
             break
-        #else:
-            #print("I guessed \"" + word + "\". There are now " + str(len(validWords)) + " valid words.")
-
