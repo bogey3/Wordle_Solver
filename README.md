@@ -9,3 +9,5 @@ This is a python program I wrote to solve wordle puzzles that can be found here:
 GeckoDriver can be found here:
 https://github.com/mozilla/geckodriver/releases
 
+# Example
+![wordle](./wordle.gif)
