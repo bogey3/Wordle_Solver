@@ -9,5 +9,10 @@ This is a python program I wrote to solve wordle puzzles that can be found here:
 GeckoDriver can be found here:
 https://github.com/mozilla/geckodriver/releases
 
+<br>
+Ensure you have firefox installed, or modify the code to work with another browser and use the appropriate driver:
+
+https://www.selenium.dev/documentation/webdriver/getting_started/install_drivers/
+
 # Example
 ![wordle](./wordle.gif)
