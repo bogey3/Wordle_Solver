@@ -1,7 +1,5 @@
 import random
 import time
-import io
-from PIL import Image
 from selenium.webdriver import Firefox
 from selenium.webdriver.firefox.service import Service
 from selenium.webdriver.common.by import By
@@ -31,10 +29,15 @@ def openWordle():
     s = Service("geckodriver.exe", log_path="NUL")
     browser = Firefox(service=s)
     browser.set_window_rect(0, 0, 500, 800)
-    browser.get('https://www.powerlanguage.co.uk/wordle/')
+    browser.get('https://www.nytimes.com/games/wordle/index.html')
 
+    time.sleep(1)
+    browser.find_element(By.XPATH, "//button[@aria-label=\"Close\"]").click()
     time.sleep(0.5)
-    browser.find_element(By.XPATH, "/html/body").click()
+    try:
+        browser.execute_script("document.getElementById(\"top\").remove()")
+    except:
+        pass
     return browser
 
     pass
@@ -45,19 +48,18 @@ def enterWord(browser, word):
         time.sleep(0.2)
     browser.find_element(By.XPATH, "/html/body").send_keys(Keys.ENTER)
     time.sleep(2)
-    browser.set_window_rect(0, 0, 500, 800)
-    return browser.get_screenshot_as_png()
+    return
 
-def checkWebAnswer(guess, screenshot, row):
+def checkWebAnswer(guess, row):
+
+    lettersData = browser.find_elements(By.XPATH, "//div[@aria-label=\"Row {}\"]//div[@aria-roledescription=\"tile\"]".format(row+1))
     letters = {}
-    image = Image.open(io.BytesIO(screenshot))
 
-    for column in range(5):
-        r, g, b, a = image.getpixel((115 + (column*84), 115 + (row * 84)))
-
-        if r == 83 and b == 78 and g == 141:
+    for column, letter in enumerate(lettersData):
+        value = letter.get_attribute("data-state")
+        if value == "correct":
             letters[guess[column]] = [column]
-        elif r == 181 and b == 59 and g == 159:
+        elif value == "present":
             locations = [0,1,2,3,4]
             locations.remove(column)
             letters[guess[column]] = locations
@@ -87,8 +89,8 @@ if __name__ == '__main__':
     for guesses, word in enumerate(["train", "chose", "drums", "felty", "kapow"]):
         if countFoundLetters(letters) == 5:
             word = random.choice(validWords)
-        result = enterWord(browser, word)
-        newLetters = checkWebAnswer(word, result, guesses)
+        enterWord(browser, word)
+        newLetters = checkWebAnswer(word, guesses)
         for letter, value in newLetters.items():
             if value == None or len(value) == 1 or letter not in letters:
                 letters[letter] = value
@@ -107,3 +109,4 @@ if __name__ == '__main__':
             break
     if len(validWords) > 1:
         browser.execute_script("alert('I was not able to find the word, here are the possible words:\\n" + "\\n".join(validWords) + "')")
+
